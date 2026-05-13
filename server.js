@@ -46,4 +46,28 @@ app.get('/calibrate', async (req, res) => {
   res.json(results);
 });
 
+
+app.get('/calibrate2', async (req, res) => {
+  const ids = ['215469013281975', '215469774352650', '215470013195953', '215469945133962', '215470271944236', '215470374964437', '215470547572553', '215470693062125', '215470646606106', '215470900245391', '215471631118048', '215472228011469', '215472279731558', '215472689249461', '215474014750459', '215474045260236', '215468850323365', '215468919145369', '215470020932625', '215470015882102'];
+  const grades = {'215469013281975': {'agent': 'Gab', 'total': 18, 'tone': 1, 'accuracy': 5, 'clarity': 3, 'cause': 2, 'investigation': 1, 'relevance': 5, 'teamwork': 0}, '215469774352650': {'agent': 'Keirth', 'total': 19, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 4, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215470013195953': {'agent': 'Adam', 'total': 20, 'tone': 0, 'accuracy': 5, 'clarity': 1, 'cause': 4, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215469945133962': {'agent': 'PJ', 'total': 19, 'tone': 0, 'accuracy': 3, 'clarity': 1, 'cause': 5, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215470271944236': {'agent': 'PJ', 'total': 19, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 4, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215470374964437': {'agent': 'PJ', 'total': 15, 'tone': 1, 'accuracy': 4, 'clarity': 1, 'cause': 2, 'investigation': 1, 'relevance': 4, 'teamwork': 1}, '215470547572553': {'agent': 'PJ', 'total': 13, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 2, 'investigation': 1, 'relevance': 3, 'teamwork': 1}, '215470693062125': {'agent': 'Adam', 'total': 17, 'tone': 1, 'accuracy': 5, 'clarity': 1, 'cause': 2, 'investigation': 3, 'relevance': 3, 'teamwork': 1}, '215470646606106': {'agent': 'Keirth', 'total': 15, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 2, 'investigation': 2, 'relevance': 4, 'teamwork': 1}, '215470900245391': {'agent': 'Gab', 'total': 20, 'tone': 0, 'accuracy': 5, 'clarity': 0, 'cause': 5, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215471631118048': {'agent': 'Keirth', 'total': 13, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 2, 'investigation': 1, 'relevance': 3, 'teamwork': 1}, '215472228011469': {'agent': 'Gab', 'total': 17, 'tone': 1, 'accuracy': 5, 'clarity': 1, 'cause': 2, 'investigation': 2, 'relevance': 4, 'teamwork': 1}, '215472279731558': {'agent': 'PJ', 'total': 20, 'tone': 0, 'accuracy': 5, 'clarity': 1, 'cause': 4, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215472689249461': {'agent': 'Keirth', 'total': 16, 'tone': 1, 'accuracy': 4, 'clarity': 3, 'cause': 2, 'investigation': 1, 'relevance': 3, 'teamwork': 1}, '215474014750459': {'agent': 'Gab', 'total': 16, 'tone': 0, 'accuracy': 5, 'clarity': 1, 'cause': 2, 'investigation': 3, 'relevance': 4, 'teamwork': 1}, '215474045260236': {'agent': 'Adam', 'total': 16, 'tone': 1, 'accuracy': 5, 'clarity': 3, 'cause': 2, 'investigation': 1, 'relevance': 2, 'teamwork': 1}, '215468850323365': {'agent': 'Adam', 'total': 19, 'tone': 1, 'accuracy': 4, 'clarity': 1, 'cause': 4, 'investigation': 3, 'relevance': 4, 'teamwork': 1}, '215468919145369': {'agent': 'Adam', 'total': 18, 'tone': 1, 'accuracy': 5, 'clarity': 3, 'cause': 2, 'investigation': 3, 'relevance': 2, 'teamwork': 1}, '215470020932625': {'agent': 'Gab', 'total': 20, 'tone': 0, 'accuracy': 3, 'clarity': 2, 'cause': 5, 'investigation': 3, 'relevance': 5, 'teamwork': 1}, '215470015882102': {'agent': 'Keirth', 'total': 13, 'tone': 0, 'accuracy': 4, 'clarity': 1, 'cause': 3, 'investigation': 1, 'relevance': 2, 'teamwork': 1}};
+  const results = [];
+  for (const id of ids) {
+    try {
+      const r = await fetch(INTERCOM_BASE + '/conversations/' + id, { headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' } });
+      const d = await r.json();
+      const parts = [];
+      if (d.source && d.source.body) parts.push('USER: ' + d.source.body.replace(/<[^>]+>/g,'').trim());
+      for (const p of (d.conversation_parts && d.conversation_parts.conversation_parts) || []) {
+        if (!p.body) continue;
+        const author = (p.author && p.author.type === 'admin') ? 'AGENT' : 'USER';
+        parts.push(author + ': ' + p.body.replace(/<[^>]+>/g,'').trim());
+      }
+      results.push({ id, grade: grades[id], subject: d.source && d.source.subject, transcript: parts.join('\n') });
+    } catch(e) {
+      results.push({ id, grade: grades[id], error: e.message });
+    }
+  }
+  res.json(results);
+});
+
 app.listen(PORT, () => console.log('Running on port ' + PORT));
