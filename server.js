@@ -70,4 +70,16 @@ app.get('/calibrate2', async (req, res) => {
   res.json(results);
 });
 
+
+app.post('/search', async (req, res) => {
+  try {
+    const r = await fetch(INTERCOM_BASE + '/conversations/search', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
+
 app.listen(PORT, () => console.log('Running on port ' + PORT));
