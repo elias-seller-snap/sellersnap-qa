@@ -15,7 +15,7 @@ app.all('/admins', async (req, res) => {
     res.status(r.status).json(await r.json());
   } catch(e) { res.status(502).json({error: e.message}); }
 });
-app.all('/conversations*', async (req, res) => {
+app.all('/conversations/:id?', async (req, res) => {
   try {
     const r = await fetch(INTERCOM_BASE + req.url, { method: req.method, headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' }, body: req.method === 'GET' ? undefined : JSON.stringify(req.body) });
     res.status(r.status).json(await r.json());
