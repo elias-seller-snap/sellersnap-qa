@@ -10,7 +10,7 @@ const INTERCOM_BASE = 'https://api.intercom.io';
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-app.all('/*', async (req, res) => {
+app.all('/*splat', async (req, res) => {
   const targetUrl = `${INTERCOM_BASE}${req.path}${req.url.includes('?') ? '?' + req.url.split('?')[1] : ''}`;
   try {
     const response = await fetch(targetUrl, {
