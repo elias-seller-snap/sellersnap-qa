@@ -7,19 +7,15 @@ const PORT = process.env.PORT || 3001;
 const TOKEN = process.env.INTERCOM_TOKEN;
 const INTERCOM_BASE = 'https://api.intercom.io';
 
-app.use(cors({ origin: '*' }));
+app.use(cors());
 app.use(express.json());
 
 app.all('/*splat', async (req, res) => {
-  const targetUrl = `${INTERCOM_BASE}${req.path}${req.url.includes('?') ? '?' + req.url.split('?')[1] : ''}`;
+  const targetUrl = INTERCOM_BASE + req.path + (req.url.includes('?') ? '?' + req.url.split('?')[1] : '');
   try {
     const response = await fetch(targetUrl, {
       method: req.method,
-      headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
       body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body),
     });
     const data = await response.json();
@@ -29,4 +25,4 @@ app.all('/*splat', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Intercom proxy running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log('Intercom proxy running on http://localhost:' + PORT));
