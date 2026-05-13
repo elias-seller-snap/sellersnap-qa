@@ -1,28 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 const TOKEN = process.env.INTERCOM_TOKEN;
 const INTERCOM_BASE = 'https://api.intercom.io';
-
 app.use(cors());
 app.use(express.json());
-
-app.all('/*splat', async (req, res) => {
-  const targetUrl = INTERCOM_BASE + req.path + (req.url.includes('?') ? '?' + req.url.split('?')[1] : '');
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.all('/admins', async (req, res) => {
   try {
-    const response = await fetch(targetUrl, {
-      method: req.method,
-      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: ['GET','HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body),
-    });
-    const data = await response.json();
-    res.status(response.status).json(data);
-  } catch (err) {
-    res.status(502).json({ error: 'Proxy error', message: err.message });
-  }
+    const r = await fetch(INTERCOM_BASE + '/admins', { headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' } });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
 });
-
-app.listen(PORT, () => console.log('Intercom proxy running on http://localhost:' + PORT));
+app.all('/conversations*', async (req, res) => {
+  try {
+    const r = await fetch(INTERCOM_BASE + req.url, { method: req.method, headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' }, body: req.method === 'GET' ? undefined : JSON.stringify(req.body) });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
+app.listen(PORT, () => console.log('Running on port ' + PORT));
