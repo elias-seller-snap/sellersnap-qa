@@ -7,68 +7,64 @@ SellerSnap is an Amazon repricing and analytics tool. KB: https://help.sellersna
 PILLAR 1 - CHEERFUL CHARMERS (2 pts)
 
 1a. Pleasant tone overall (1pt)
-  1 = Genuine warmth, matched the user energy, felt human
-  0 = Robotic opener (Hi X, thank you for reaching out), copy-paste KB tone, OR missed an emotional signal (user said frustrated, been dealing with this for a month, or is leaving/cancelling)
+  1 = Genuine warmth, matched user energy, felt human not robotic
+  0 = Generic opener like Hi X thank you for reaching out; OR missed emotional signal (user expressed frustration, said for a month, or is cancelling)
 
 1b. Tone appropriate to user initial tone (1pt)
-  1 = Matched the user emotional register appropriately
-  0 = Tone mismatch - too stiff for a casual user, or too casual for a frustrated/formal user
+  1 = Matched the users emotional register appropriately
+  0 = Too stiff for casual user, or too casual for frustrated/formal user
 
 PILLAR 2 - EDUCATORS (13 pts)
 
 2a. Accuracy of knowledge provided (5pts)
   5 = Fully correct, no errors or misleading info
   4 = Mostly correct with minor imprecision, OR relied on KB link without explaining in plain language
-  3 = Made a claim they could not back up with specifics, OR gave wrong info first that had to be corrected later
-  2 = Did the action but did not explain what was done or why (just I did it with no context)
-  1 = Significant errors or sent Looms/resources that did not answer the actual question
+  3 = Made a claim they could not back up with specifics, OR gave wrong info first that was corrected later
+  2 = Did the action but did not explain what was done or why
+  1 = Significant errors, OR sent Looms that did not answer the actual question
   0 = Fundamentally wrong information or completely incorrect approach
 
 2b. Clarity of explanation (3pts)
-  3 = Clear step-by-step that user could follow without guessing, logical flow
+  3 = Clear step-by-step that user could follow without guessing
   2 = Mostly clear with minor ambiguity
-  1 = Technically correct but overwhelming or hard to parse; OR internal notes visible to user; OR second-guessed own answer (I think...); OR response relies on screenshots user cannot see; OR correct answer but no story connecting the steps
+  1 = Technically correct but overwhelming; OR internal notes visible to user; OR agent second-guessed own answer (I think...); OR correct but no story connecting the steps
   0 = Technically correct but a non-expert could not follow it at all
 
 2c. Cause of issue identified or escalated promptly (5pts)
   5 = Root cause correctly found and fully addressed, OR immediate clean escalation with full context
   4 = Root cause mostly identified, minor gap in diagnosis
-  3 = Identified the issue category but gave a general solution without confirming it applies to this specific account or SKU
-  2 = Answered the literal question but missed the real underlying need; OR identified the symptom but not why it is happening; OR said not possible without exploring alternatives; OR answered the easy part and ignored the harder more important part
-  1 = Misdiagnosed or escalated too late after wasting user time
-  0 = Generic template response to a specific problem; completely abandoned ticket mid-way; fundamentally wrong approach
+  3 = Identified the issue category but gave general solution without confirming it applies to this specific account or SKU
+  2 = Answered the literal question but missed the real underlying need; OR identified symptom but not root cause; OR said not possible without exploring alternatives; OR answered the easy part and ignored the harder part; OR missed opportunity to help a trial user get set up
+  1 = Misdiagnosed or escalated too late
+  0 = Generic template response to a specific problem; completely abandoned ticket; fundamentally wrong approach
 
 PILLAR 3 - TRIUMPHANT TROUBLESHOOTERS (8 pts)
 
 3a. All relevant places checked (3pts)
-  3 = Checked everything relevant: account settings, specific SKUs/ASINs mentioned, repricing logs, prior tickets, Seller Central API data
+  3 = Checked everything relevant: account settings, specific SKUs mentioned, repricing logs, Seller Central API data, prior tickets
   2 = Checked most relevant areas, missed one obvious place
-  1 = Gave partial data requiring the user to ask multiple follow-up questions for the same request; OR gave a general policy answer when user provided specific SKUs to check
+  1 = Gave partial data requiring user to ask multiple follow-ups for same request; OR gave general policy answer when user provided specific SKUs to check
   0 = No investigation performed at all
 
 3b. Response relevant to inquiry and solutions suggested (5pts)
   5 = Directly addressed what the user actually needed, not just what they literally asked
   4 = Mostly relevant with a minor miss
   3 = Answered part of the question, missed another part
-  2 = Missed part of the user question entirely and had to come back to it; OR explained the theory behind an issue without offering a path to resolution
+  2 = Missed part of user question entirely and had to come back to it; OR explained theory without offering a path to resolution
   1 = Answered the literal question but completely missed what the user actually needed
   0 = Irrelevant response
 
 PILLAR 4 - CREATIVE COLLABORATORS (6 pts)
 
-4a. Response relevant and solutions suggested (5pts) - see 3b above, these share the score
+4a. Response relevant and solutions suggested (5pts) - same score as 3b above
 
 4b. Teamwork and handoff (1pt)
-  1 = Seamless planned handoff with full context for next agent, OR handled ticket end-to-end without needing help
-  0 = Rescue situation where a senior agent stepped in because junior could not handle it (unplanned); OR escalation with no context leaving the next agent to start from scratch
+  1 = Seamless planned handoff with full context for next agent, OR handled ticket end-to-end
+  0 = Rescue situation where senior stepped in because junior could not handle it; OR escalation with no context
 
-IMPORTANT CONTEXT FOR SELLERSNAP:
-- Common topics: AI repricing, Buy Box strategy, min/max prices, DMP (Dynamic Max Price), FBA vs FBM, B2B repricing, CSV imports, repricing presets, Buy Box share calculations, stranded listings, pricing errors
-- Trial users deserve extra attention - missing an opportunity to help a trial user get set up is a cause=2 even if the literal question was answered
-- Large accounts (high volume sellers) should be recognized and given extra care
-- Agents often use Loom videos - a Loom that does not answer the question scores the same as no answer
-let agent=null,ST=null;
-function init(){const ch=document.getElementById('chips');AGENTS.forEach(a=>{const d=document.createElement('div');d.className='chip';d.dataset.n=a.name;d.innerHTML=`<div class="av" style="background:${a.c};color:${a.t}">${a.name.slice(0,2).toUpperCase()}</div>${a.name}`;d.onclick=()=>pick(a.name);ch.appendChild(d);});document.getElementById('rubric').value=RUBRIC;const today=new Date(),day=today.getDay();const sun=new Date(today);sun.setDate(today.getDate()-day);const sat=new Date(sun);sat.setDate(sun.getDate()+6);document.getElementById('df').value=sun.toISOString().split('T')[0];document.getElementById('dt').value=sat.toISOString().split('T')[0];document.getElementById('df').onchange=upBtn;document.getElementById('dt').onchange=upBtn;}
+SELLERSNAP CONTEXT:
+Common topics: AI repricing, Buy Box strategy, min/max prices, DMP, FBA vs FBM, B2B repricing, CSV imports, repricing presets, Buy Box share, stranded listings, pricing errors.
+Large accounts and trial users deserve extra attention and proactive help.`;d.onclick=()=>pick(a.name);ch.appendChild(d);});document.getElementById('rubric').value=RUBRIC;const today=new Date(),day=today.getDay();const sun=new Date(today);sun.setDate(today.getDate()-day);const sat=new Date(sun);sat.setDate(sun.getDate()+6);document.getElementById('df').value=sun.toISOString().split('T')[0];document.getElementById('dt').value=sat.toISOString().split('T')[0];document.getElementById('df').onchange=upBtn;document.getElementById('dt').onchange=upBtn;}
 function pick(n){agent=(agent===n)?null:n;document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.n===agent));upBtn();}
 function upBtn(){document.getElementById('runbtn').disabled=!(agent&&document.getElementById('df').value&&document.getElementById('dt').value);}
 function setSt(t,txt){document.getElementById('sb').style.display='flex';document.getElementById('sd').className='dot d'+t;document.getElementById('st').textContent=txt;}
