@@ -9,15 +9,10 @@ const INTERCOM_BASE = 'https://api.intercom.io';
 app.use(cors());
 app.use(express.json());
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.all('/admins', async (req, res) => {
+app.use('/api', async (req, res) => {
   try {
-    const r = await fetch(INTERCOM_BASE + '/admins', { headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' } });
-    res.status(r.status).json(await r.json());
-  } catch(e) { res.status(502).json({error: e.message}); }
-});
-app.all('/conversations/:id?', async (req, res) => {
-  try {
-    const r = await fetch(INTERCOM_BASE + req.url, { method: req.method, headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' }, body: req.method === 'GET' ? undefined : JSON.stringify(req.body) });
+    const url = INTERCOM_BASE + req.url.replace('/api','').replace(/^/api/,'');
+    const r = await fetch(url, { method: req.method, headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: req.method === 'GET' ? undefined : JSON.stringify(req.body) });
     res.status(r.status).json(await r.json());
   } catch(e) { res.status(502).json({error: e.message}); }
 });
