@@ -46,4 +46,15 @@ app.post('/grade', async (req, res) => {
     res.status(r.status).json(await r.json());
   } catch(e) { res.status(502).json({error: e.message}); }
 });
+
+app.post('/search-conversations', async (req, res) => {
+  try {
+    const r = await fetch('https://api.intercom.io/conversations/search', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
 app.listen(PORT, () => console.log('Running on port ' + PORT));
