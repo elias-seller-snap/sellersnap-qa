@@ -35,4 +35,15 @@ app.use('/api', async (req, res) => {
   }
 });
 
+
+app.post('/grade', async (req, res) => {
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify(req.body)
+    });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
 app.listen(PORT, () => console.log('Running on port ' + PORT));
