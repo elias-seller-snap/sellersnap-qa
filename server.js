@@ -73,12 +73,25 @@ app.get('/calibrate2', async (req, res) => {
 
 app.post('/search', async (req, res) => {
   try {
+    const { adminId, fromTs, toTs } = req.body;
+    const searchBody = {
+      query: {
+        operator: "AND",
+        value: [
+          { field: "assignee.id", operator: "=", value: String(adminId) },
+          { field: "updated_at", operator: ">", value: fromTs },
+          { field: "updated_at", operator: "<", value: toTs }
+        ]
+      },
+      pagination: { per_page: 150 }
+    };
     const r = await fetch(INTERCOM_BASE + '/conversations/search', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(searchBody)
     });
-    res.status(r.status).json(await r.json());
+    const data = await r.json();
+    res.status(r.status).json(data);
   } catch(e) { res.status(502).json({error: e.message}); }
 });
 
