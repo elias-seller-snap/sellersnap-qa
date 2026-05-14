@@ -78,7 +78,7 @@ app.post('/search', async (req, res) => {
       query: {
         operator: 'AND',
         value: [
-          { field: 'assignee.id', operator: '=', value: parseInt(adminId) },
+          { field: 'admin_assignee_id', operator: '=', value: parseInt(adminId) },
           { field: 'updated_at', operator: '>', value: parseInt(fromTs) },
           { field: 'updated_at', operator: '<', value: parseInt(toTs) }
         ]
