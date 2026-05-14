@@ -91,6 +91,7 @@ app.post('/search', async (req, res) => {
       body: JSON.stringify(searchBody)
     });
     const data = await r.json();
+    console.log("SEARCH RESPONSE:", r.status, JSON.stringify(data).slice(0,500));
     res.status(r.status).json(data);
   } catch(e) { res.status(502).json({error: e.message}); }
 });
