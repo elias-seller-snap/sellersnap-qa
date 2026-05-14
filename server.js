@@ -96,30 +96,18 @@ app.post('/search', async (req, res) => {
   } catch(e) { res.status(502).json({error: e.message}); }
 });
 
-sed -i '' 's/app.get("/api/admins", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/admins", { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
+app.get('/api/admins', async (req, res) => {
+  try {
+    const r = await fetch(INTERCOM_BASE + '/admins', { headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' } });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
 
-app.get("/api/conversations/:id", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/conversations/" + req.params.id, { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
+app.get('/api/conversations/:id', async (req, res) => {
+  try {
+    const r = await fetch(INTERCOM_BASE + '/conversations/' + req.params.id, { headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json' } });
+    res.status(r.status).json(await r.json());
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
 
-app.listen(PORT/app.get("\/api\/admins", async 
-(req, res) => {\n  const r = await fetch(INTERCOM_BASE + 
-"\/admins", { headers: { "Authorization": "Bearer " + TOKEN, 
-"Accept": "application\/json" } });\n  
-res.status(r.status).json(await 
-r.json());\n});\n\napp.get("\/api\/conversations\/:id", 
-async (req, res) => {\n  const r = await fetch(INTERCOM_BASE 
-+ "\/conversations\/" + req.params.id, { headers: { 
-"Authorization": "Bearer " + TOKEN, "Accept": 
-"application\/json" } });\n  res.status(r.status).json(await 
-r.json());\n});\n\napp.get("/api/admins", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/admins", { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
-
-app.get("/api/conversations/:id", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/conversations/" + req.params.id, { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
-
-app.listen(PORT/' 
-~/sellersnap-qa/server.jstail -20 ~/sellersnap-qa/server.js
-app.get("/api/admins", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/admins", { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
-
-app.get("/api/conversations/:id", async (req, res) => { try { const r = await fetch(INTERCOM_BASE + "/conversations/" + req.params.id, { headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/json" } }); res.status(r.status).json(await r.json()); } catch(e) { res.status(502).json({error: e.message}); } });
-
-app.listen(PORT, 
-() => console.log('Running on port ' + PORT));
- 
+app.listen(PORT, () => console.log('Running on port ' + PORT));
