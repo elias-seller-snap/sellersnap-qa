@@ -117,9 +117,7 @@ async function searchConvs(adminId,df,dt){
   return d.conversations||[];
 }
 
-async function getMsgs(id,agentId){const r=await fetch('/api/conversations/'+id);if(!r.ok)return null;const d=await r.json();const parts=[];const agentParts=[];if(d.source&&d.source.body)parts.push('USER: '+d.source.body.replace(/<[^>]+>/g,'').trim());for(const p of(d.conversation_parts&&d.conversation_parts.conversation_parts)||[]){if(!p.body)continue;const isReviewedAgent=p.author&&p.author.id===String(agentId);const isAgent=p.author&&p.author.type==='admin';const label=isReviewedAgent?'REVIEWED AGENT':isAgent?'OTHER AGENT':'USER';parts.push(label+': '+p.body.replace(/<[^>]+>/g,'').trim());if(isReviewedAgent)agentParts.push(p.body);}const teammateAdmins=(d.teammates&&d.teammates.admins)||[];const isSolo=teammateAdmins.length<=1;if(agentParts.length===0)return null;return{id:id,subject:(d.source&&d.source.subject)||'Conversation '+id,transcript:parts.join('
-'),isSolo:isSolo,agentReplyCount:agentParts.length};}
-  return{id:id,subject:(d.source&&d.source.subject)||'Conversation '+id,transcript:parts.join('\n')};
+async function getMsgs(id,agentId){const r=await fetch('/api/conversations/'+id);if(!r.ok)return null;const d=await r.json();const parts=[];const agentParts=[];if(d.source&&d.source.body)parts.push('USER: '+d.source.body.replace(/<[^>]+>/g,'').trim());for(const p of(d.conversation_parts&&d.conversation_parts.conversation_parts)||[]){if(!p.body)continue;const isReviewedAgent=p.author&&p.author.id===String(agentId);const isAgent=p.author&&p.author.type==='admin';const label=isReviewedAgent?'REVIEWED AGENT':isAgent?'OTHER AGENT':'USER';parts.push(label+': '+p.body.replace(/<[^>]+>/g,'').trim());if(isReviewedAgent)agentParts.push(p.body);}const teammateAdmins=(d.teammates&&d.teammates.admins)||[];const isSolo=teammateAdmins.length<=1;if(agentParts.length===0)return null;return{id:id,subject:(d.source&&d.source.subject)||'Conversation '+id,transcript:parts.join('\n'),isSolo:isSolo,agentReplyCount:agentParts.length};}
 }
 
 async function gradeConv(conv,rub){
