@@ -76,11 +76,11 @@ app.post('/search', async (req, res) => {
     const { adminId, fromTs, toTs } = req.body;
     const searchBody = {
       query: {
-        operator: "AND",
+        operator: 'AND',
         value: [
-          { field: "assignee.id", operator: "=", value: String(adminId) },
-          { field: "updated_at", operator: ">", value: fromTs },
-          { field: "updated_at", operator: "<", value: toTs }
+          { field: 'assignee.id', operator: '=', value: parseInt(adminId) },
+          { field: 'updated_at', operator: '>', value: parseInt(fromTs) },
+          { field: 'updated_at', operator: '<', value: parseInt(toTs) }
         ]
       },
       pagination: { per_page: 150 }
