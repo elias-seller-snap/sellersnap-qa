@@ -111,3 +111,51 @@ app.get('/api/conversations/:id', async (req, res) => {
 });
 
 app.listen(PORT, () => console.log('Running on port ' + PORT));
+
+app.post('/keyword-search', async (req, res) => {
+  try {
+    const { keyword, fromTs, toTs } = req.body;
+    const allConversations = [];
+    let startingAfter = null;
+    let page = 1;
+    const maxPages = 50;
+
+    while (page <= maxPages) {
+      const searchBody = {
+        query: {
+          operator: 'AND',
+          value: [
+            { field: 'source.body', operator: '~', value: keyword },
+            { field: 'created_at', operator: '>', value: parseInt(fromTs) },
+            { field: 'created_at', operator: '<', value: parseInt(toTs) }
+          ]
+        },
+        pagination: { per_page: 150, starting_after: startingAfter }
+      };
+      if (!startingAfter) delete searchBody.pagination.starting_after;
+
+      const r = await fetch(INTERCOM_BASE + '/conversations/search', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + TOKEN, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(searchBody)
+      });
+      const data = await r.json();
+      if (!data.conversations || data.conversations.length === 0) break;
+      allConversations.push(...data.conversations);
+      if (!data.pages || !data.pages.next) break;
+      startingAfter = data.pages.next.starting_after;
+      page++;
+    }
+
+    res.json({ total: allConversations.length, conversations: allConversations.map(function(c) {
+      return {
+        id: c.id,
+        created_at: c.created_at,
+        subject: (c.source && c.source.subject) || '',
+        preview: (c.source && c.source.body || '').replace(/<[^>]+>/g,'').slice(0,150),
+        admin_assignee_id: c.admin_assignee_id,
+        state: c.state
+      };
+    })});
+  } catch(e) { res.status(502).json({error: e.message}); }
+});
